@@ -15,9 +15,9 @@ def scale(image, label):
 
     return image, label
 
-strategy = tf.distribute.MirroredStrategy()
+# strategy = tf.distribute.MirroredStrategy()
 
-print ('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+# print ('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
 
 train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels))
@@ -28,17 +28,17 @@ test_dataset = test_dataset.map(scale).batch(32)
 
 
 
-with strategy.scope():
-    model = tf.keras.Sequential([
-      tf.keras.layers.Conv2D(32, 3, activation='relu', input_shape=(28, 28,1)),
-      tf.keras.layers.MaxPooling2D(),
-      tf.keras.layers.Flatten(),
-      tf.keras.layers.Dense(64, activation='relu'),
-      tf.keras.layers.Dense(10, activation='softmax')
-    ])
+# with strategy.scope():
+model = tf.keras.Sequential([
+  tf.keras.layers.Conv2D(32, 3, activation='relu', input_shape=(28, 28,1)),
+  tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Flatten(),
+  tf.keras.layers.Dense(64, activation='relu'),
+  tf.keras.layers.Dense(10, activation='softmax')
+])
 
-    model.compile(loss='sparse_categorical_crossentropy',
-                optimizer=tf.keras.optimizers.Adam(),
-                metrics=['accuracy'])
+model.compile(loss='sparse_categorical_crossentropy',
+            optimizer=tf.keras.optimizers.Adam(),
+            metrics=['accuracy'])
 
 model.fit(train_dataset, epochs=10, validation_data=test_dataset)
