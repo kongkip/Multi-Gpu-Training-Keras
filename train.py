@@ -1,3 +1,7 @@
+from comet_ml import Experiment
+experiment = Experiment(api_key="La6Dt4UTNQ6moZ5klCeCI2bzV",	
+                        project_name="general", workspace="kongkip")
+
 import tensorflow as tf
 import os
 import mute_tf_warnings as mw
@@ -41,4 +45,4 @@ with strategy.scope():
                 optimizer=tf.keras.optimizers.Adam(),
                 metrics=['accuracy'])
 
-model.fit(train_dataset, epochs=10, validation_data=test_dataset)
+model.fit(train_dataset, epochs=20, validation_data=test_dataset, callbacks=[experiment.get_callback('keras')])
