@@ -41,8 +41,10 @@ model = tf.keras.Sequential([
   tf.keras.layers.Dense(10, activation='softmax')
 ])
 
-model.compile(loss='sparse_categorical_crossentropy',
+parallel_model = tf.keras.utils.multi_gpu_model(model, gpus=8)
+
+parallel_model.compile(loss='sparse_categorical_crossentropy',
             optimizer=tf.keras.optimizers.Adam(),
             metrics=['accuracy'])
 
-model.fit(train_dataset, epochs=20, validation_data=test_dataset, callbacks=[experiment.get_callback('keras')])
+parallel_model.fit(train_dataset, epochs=20, validation_data=test_dataset, callbacks=[experiment.get_callback('keras')])
